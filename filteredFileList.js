@@ -1,14 +1,22 @@
-var fs = require("fs");
-var path = require("path");
+module.exports = function (dir, filterStr, callback) {
+	var fs = require("fs");
+	var path = require("path");
 
-function filterFiles() {
-	fs.readdir(process.argv[2], function doneReading(err, list) {
-		for (var i = 0; i < list.length; i++) {
-			if ('.'+process.argv[3] == path.extname(list[i])) {
-				console.log(list[i]);
+	fs.readdir(dir, function(err, list) {
+		if (err)
+			return callback(err);
+
+		var returnList = [];
+		for (var i=0; i < list.length; i++) {
+			if ("." + filterStr == path.extname(list[i])) {
+				returnList.push(list[i]);
 			}
 		}
+
+		// list = list.filter(function (file) {
+  //         return path.extname(file) === '.' + filterStr
+  //       })
+
+		callback(null, returnList);
 	});
 }
-
-filterFiles();
